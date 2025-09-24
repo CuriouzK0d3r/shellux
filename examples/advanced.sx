@@ -1,0 +1,65 @@
+#!/usr/bin/env shellux
+
+# Advanced Shellux features demonstration
+
+# Arrays and maps
+fruits is ["apple", "banana", "cherry"]
+config is {"debug": true, "port": 8080, "host": "localhost"}
+
+print("First fruit: " + fruits[0])
+print("Debug mode: " + config["debug"])
+
+# For loops
+for fruit in fruits {
+    print("Fruit: " + fruit)
+}
+
+# Error handling
+try {
+    # This would attempt to read a file
+    # content := read_file("nonexistent.txt")
+    print("File read successfully")
+} catch FileNotFound as e {
+    print("File not found: " + e.path)
+} catch error {
+    print("Unknown error occurred")
+}
+
+# Pattern matching
+status is "active"
+match status {
+    "active" => print("Service is running"),
+    "inactive" => print("Service is stopped"),
+    _ => print("Unknown status")
+}
+
+# String interpolation
+user is "admin"
+count is 42
+message is "User ${user} has ${count} items"
+print(message)
+
+# Function with multiple return values
+fn divide(a: float, b: float) -> (float, error) {
+    if b == 0.0 {
+        return 0.0, error("division by zero")
+    }
+    return a / b, nil
+}
+
+result, err is divide(10.0, 2.0)
+if err != nil {
+    print("Error: " + err)
+} else {
+    print("Result: " + result)
+}
+
+# Pipeline example (conceptual)
+# files is ls("/tmp")
+#     |> filter(fn(f) f.is_file())
+#     |> map(fn(f) f.name)
+#     |> sort()
+#
+# for file in files {
+#     print("File: " + file)
+# }

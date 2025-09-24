@@ -1,0 +1,25 @@
+#!/usr/bin/env shellux
+
+# Hello World in Shellux
+name is "World"
+print("Hello, " + name + "!")
+
+# Show some variables and operations
+age is 30
+is_admin is true
+
+if age >= 18 {
+    print("You are an adult!")
+}
+
+# Simple function
+fn greet(person: string) -> string {
+    return "Hello, " + person + "!"
+}
+
+message is greet("Alice")
+print(message)
+
+# Command execution example (commented out for now)
+# result is $(echo "This would execute a shell command")
+# print(result.stdout)
