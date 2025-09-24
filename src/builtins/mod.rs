@@ -107,6 +107,47 @@ pub fn register_builtins(env: &mut Environment) {
             closure: Environment::new(),
         },
     );
+
+    // Shell built-ins
+    env.define(
+        "echo".to_string(),
+        Value::Function {
+            name: "echo".to_string(),
+            parameters: vec![],
+            body: vec![],
+            closure: Environment::new(),
+        },
+    );
+
+    env.define(
+        "cd".to_string(),
+        Value::Function {
+            name: "cd".to_string(),
+            parameters: vec![],
+            body: vec![],
+            closure: Environment::new(),
+        },
+    );
+
+    env.define(
+        "pwd".to_string(),
+        Value::Function {
+            name: "pwd".to_string(),
+            parameters: vec![],
+            body: vec![],
+            closure: Environment::new(),
+        },
+    );
+
+    env.define(
+        "run".to_string(),
+        Value::Function {
+            name: "run".to_string(),
+            parameters: vec![],
+            body: vec![],
+            closure: Environment::new(),
+        },
+    );
 }
 
 pub fn call_builtin(name: &str, args: &[Value]) -> Result<Value> {
@@ -272,6 +313,93 @@ pub fn call_builtin(name: &str, args: &[Value]) -> Result<Value> {
             std::process::exit(code);
         }
 
+        "echo" => {
+            let output = args
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>()
+                .join(" ");
+            println!("{}", output);
+            Ok(Value::Nil)
+        }
+
+        "cd" => {
+            let path = if args.is_empty() {
+                std::env::var("HOME").unwrap_or_else(|_| ".".to_string())
+            } else {
+                args[0].to_string()
+            };
+
+            std::env::set_current_dir(&path)
+                .map_err(|e| anyhow!("Failed to change directory to '{}': {}", path, e))?;
+
+            Ok(Value::Nil)
+        }
+
+        "pwd" => {
+            let current_dir = std::env::current_dir()
+                .map_err(|e| anyhow!("Failed to get current directory: {}", e))?;
+
+            let path_str = current_dir.to_string_lossy().to_string();
+            println!("{}", path_str);
+            Ok(Value::Nil)
+        }
+
+        "run" => {
+            if args.is_empty() {
+                return Err(anyhow!("run expects at least 1 argument"));
+            }
+
+            let command = args[0].to_string();
+            let mut cmd_args = Vec::new();
+
+            // If there's a second argument, split it by spaces to get shell-style args
+            if args.len() > 1 {
+                let args_str = args[1].to_string();
+                for arg in args_str.split_whitespace() {
+                    cmd_args.push(arg.to_string());
+                }
+            }
+
+            // Execute the command
+            let mut cmd = std::process::Command::new(&command);
+            cmd.args(&cmd_args);
+
+            match cmd.output() {
+                Ok(output) => {
+                    // Print stderr if there's any error output
+                    if !output.stderr.is_empty() {
+                        let stderr = String::from_utf8_lossy(&output.stderr);
+                        eprint!("{}", stderr);
+                    }
+
+                    // Print stdout
+                    if !output.stdout.is_empty() {
+                        let stdout = String::from_utf8_lossy(&output.stdout);
+                        print!("{}", stdout);
+                    }
+
+                    if output.status.success() {
+                        Ok(Value::Nil)
+                    } else {
+                        let exit_code = output.status.code().unwrap_or(-1);
+                        Err(anyhow!(
+                            "Command '{}' failed with exit code {}",
+                            command,
+                            exit_code
+                        ))
+                    }
+                }
+                Err(e) => {
+                    if e.kind() == std::io::ErrorKind::NotFound {
+                        Err(anyhow!("Command not found: {}", command))
+                    } else {
+                        Err(anyhow!("Failed to execute command '{}': {}", command, e))
+                    }
+                }
+            }
+        }
+
         _ => Err(anyhow!("Unknown built-in function: {}", name)),
     }
 }
@@ -289,5 +417,9 @@ pub fn is_builtin(name: &str) -> bool {
             | "to_int"
             | "to_float"
             | "exit"
+            | "echo"
+            | "cd"
+            | "pwd"
+            | "run"
     )
 }

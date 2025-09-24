@@ -2,6 +2,7 @@ use crate::builtins::{call_builtin, is_builtin, register_builtins};
 use crate::parser::ast::*;
 use anyhow::{anyhow, Result};
 use std::collections::HashMap;
+
 use std::process::Command;
 
 #[derive(Debug, Clone)]
@@ -74,6 +75,7 @@ impl Value {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Environment {
     variables: HashMap<String, Value>,
+    constants: HashMap<String, bool>,
     parent: Option<Box<Environment>>,
 }
 
@@ -97,6 +99,7 @@ impl Environment {
     pub fn new() -> Self {
         Self {
             variables: HashMap::new(),
+            constants: HashMap::new(),
             parent: None,
         }
     }
@@ -104,12 +107,22 @@ impl Environment {
     pub fn new_with_parent(parent: Environment) -> Self {
         Self {
             variables: HashMap::new(),
+            constants: HashMap::new(),
             parent: Some(Box::new(parent)),
         }
     }
 
     pub fn define(&mut self, name: String, value: Value) {
-        self.variables.insert(name, value);
+        self.define_variable(name, value, false);
+    }
+
+    pub fn define_const(&mut self, name: String, value: Value) {
+        self.define_variable(name, value, true);
+    }
+
+    fn define_variable(&mut self, name: String, value: Value, is_const: bool) {
+        self.variables.insert(name.clone(), value);
+        self.constants.insert(name, is_const);
     }
 
     pub fn get(&self, name: &str) -> Option<Value> {
@@ -124,6 +137,12 @@ impl Environment {
 
     pub fn set(&mut self, name: &str, value: Value) -> Result<()> {
         if self.variables.contains_key(name) {
+            // Check if this is a constant
+            if let Some(&is_const) = self.constants.get(name) {
+                if is_const {
+                    return Err(anyhow!("Cannot assign to const variable: {}", name));
+                }
+            }
             self.variables.insert(name.to_string(), value);
             Ok(())
         } else if let Some(parent) = &mut self.parent {
@@ -174,7 +193,7 @@ impl Interpreter {
 
             Stmt::Const { name, value, .. } => {
                 let val = self.evaluate_expression(value)?;
-                self.environment.define(name, val.clone());
+                self.environment.define_const(name, val.clone());
                 Ok(val)
             }
 
@@ -254,10 +273,14 @@ impl Interpreter {
             Expr::Nil => Ok(Value::Nil),
 
             Expr::Identifier(name) => {
-                if let Some(value) = self.environment.get(&name) {
+                // Check built-ins first, then environment variables, then external commands
+                if is_builtin(&name) {
+                    call_builtin(&name, &[])
+                } else if let Some(value) = self.environment.get(&name) {
                     Ok(value)
                 } else {
-                    Err(anyhow!("Undefined variable: {}", name))
+                    // If it's not a built-in or variable, try to execute as external command
+                    self.execute_external_command(&name, &[])
                 }
             }
 
@@ -319,7 +342,8 @@ impl Interpreter {
                         self.environment = previous;
                         Ok(result)
                     } else {
-                        Err(anyhow!("Undefined function: {}", name))
+                        // Try to execute as external command
+                        self.execute_external_command(&name, &arg_values)
                     }
                 }
             }
@@ -461,6 +485,53 @@ impl Interpreter {
             )),
         }
     }
+
+    fn execute_external_command(&mut self, command: &str, args: &[Value]) -> Result<Value> {
+        // Convert arguments to strings
+        let mut cmd_args = Vec::new();
+        for arg in args {
+            cmd_args.push(arg.to_string());
+        }
+
+        // Execute the command
+        let mut cmd = Command::new(command);
+        cmd.args(&cmd_args);
+
+        match cmd.output() {
+            Ok(output) => {
+                // Print stderr if there's any error output
+                if !output.stderr.is_empty() {
+                    let stderr = String::from_utf8_lossy(&output.stderr);
+                    eprint!("{}", stderr);
+                }
+
+                // Print stdout directly to avoid double output in REPL
+                if !output.stdout.is_empty() {
+                    let stdout = String::from_utf8_lossy(&output.stdout);
+                    print!("{}", stdout);
+                }
+
+                if output.status.success() {
+                    Ok(Value::Nil)
+                } else {
+                    let exit_code = output.status.code().unwrap_or(-1);
+                    Err(anyhow!(
+                        "Command '{}' failed with exit code {}",
+                        command,
+                        exit_code
+                    ))
+                }
+            }
+            Err(e) => {
+                // Check if it's a "command not found" type error
+                if e.kind() == std::io::ErrorKind::NotFound {
+                    Err(anyhow!("Command not found: {}", command))
+                } else {
+                    Err(anyhow!("Failed to execute command '{}': {}", command, e))
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -511,5 +582,66 @@ mod tests {
 
         let result = interpreter.interpret(program).unwrap();
         assert_eq!(result, Value::Integer(5));
+    }
+
+    #[test]
+    fn test_const_declaration() {
+        let source = "const x is 42\nx";
+        let mut lexer = Lexer::new(source);
+        let tokens = lexer.tokenize();
+        let mut parser = Parser::new(tokens);
+        let program = parser.parse().unwrap();
+        let mut interpreter = Interpreter::new();
+
+        let result = interpreter.interpret(program).unwrap();
+        assert_eq!(result, Value::Integer(42));
+    }
+
+    #[test]
+    fn test_const_reassignment_fails() {
+        let source = "const x is 42\nx = 10";
+        let mut lexer = Lexer::new(source);
+        let tokens = lexer.tokenize();
+        let mut parser = Parser::new(tokens);
+        let program = parser.parse().unwrap();
+        let mut interpreter = Interpreter::new();
+
+        let result = interpreter.interpret(program);
+        assert!(result.is_err());
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Cannot assign to const variable: x"));
+    }
+
+    #[test]
+    fn test_let_reassignment_succeeds() {
+        let source = "let x is 42\nx = 10\nx";
+        let mut lexer = Lexer::new(source);
+        let tokens = lexer.tokenize();
+        let mut parser = Parser::new(tokens);
+        let program = parser.parse().unwrap();
+        let mut interpreter = Interpreter::new();
+
+        let result = interpreter.interpret(program).unwrap();
+        assert_eq!(result, Value::Integer(10));
+    }
+
+    #[test]
+    fn test_mixed_let_const_declarations() {
+        let source = r#"
+            let x is 10
+            const y is 20
+            x = 30
+            x + y
+        "#;
+        let mut lexer = Lexer::new(source);
+        let tokens = lexer.tokenize();
+        let mut parser = Parser::new(tokens);
+        let program = parser.parse().unwrap();
+        let mut interpreter = Interpreter::new();
+
+        let result = interpreter.interpret(program).unwrap();
+        assert_eq!(result, Value::Integer(50));
     }
 }

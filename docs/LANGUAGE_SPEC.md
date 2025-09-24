@@ -20,9 +20,9 @@ Shellux is a modern scripting language designed to replace bash scripting with i
 ### Variables and Types
 ```shellux
 # Variable declaration (inferred typing)
-name := "John"
-age := 30
-is_admin := true
+name is "John"
+age is 30
+is_admin is true
 
 # Explicit typing
 count: int = 0

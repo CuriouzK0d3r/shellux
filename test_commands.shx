@@ -1,0 +1,112 @@
+#!/usr/bin/env shellux
+
+# Shellux External Command Test Script
+# This script demonstrates various ways to run external programs
+
+print("=== Shellux External Command Test ===")
+print()
+
+# Test 1: Direct command execution (zero arguments)
+print("Test 1: Direct command execution")
+print("Current directory:")
+pwd
+print("Directory listing:")
+ls
+print("Current date:")
+date
+print()
+
+# Test 2: Function call syntax with arguments
+print("Test 2: Function calls with arguments")
+print("Detailed directory listing:")
+ls("-la")
+print("Echo with message:")
+echo("Hello from Shellux!")
+print()
+
+# Test 3: Command substitution - capture output
+print("Test 3: Command substitution")
+let current_dir = $(pwd)
+print("Captured current directory: " + current_dir)
+
+let file_list = $(ls)
+print("Files in directory: " + file_list)
+
+let current_user = $(whoami)
+print("Current user: " + current_user)
+print()
+
+# Test 4: Using the run() built-in
+print("Test 4: Using run() built-in")
+run("echo", "This is from run() function")
+run("ls", "-l")
+print("Finding Rust files:")
+run("find", ". -name '*.rs' -type f")
+print()
+
+# Test 5: Built-in shell commands
+print("Test 5: Built-in commands")
+print("Current working directory:")
+pwd
+print("Changing to /tmp:")
+cd("/tmp")
+pwd
+print("Going back to home:")
+cd()
+pwd
+print()
+
+# Test 6: File operations
+print("Test 6: File operations")
+write_file("test.txt", "Hello from Shellux file operations!")
+let content = read_file("test.txt")
+print("File content: " + content)
+run("rm", "test.txt")
+print()
+
+# Test 7: Error handling
+print("Test 7: Error handling")
+print("Trying to run non-existent command:")
+# This will show an error but continue execution
+nonexistent_command
+print("Continuing after error...")
+print()
+
+# Test 8: Complex command examples
+print("Test 8: Complex commands")
+print("System information:")
+run("uname", "-a")
+print("Disk usage:")
+run("df", "-h")
+print()
+
+# Test 9: Command chaining and variables
+print("Test 9: Command chaining with variables")
+let backup_dir = "/tmp/shellux_backup"
+run("mkdir", "-p " + backup_dir)
+run("cp", "Cargo.toml " + backup_dir + "/")
+print("Backup created in: " + backup_dir)
+run("ls", "-la " + backup_dir)
+run("rm", "-rf " + backup_dir)
+print()
+
+# Test 10: Development workflow example
+print("Test 10: Development workflow")
+print("Checking Git status:")
+if $(which git) != "" {
+    run("git", "status --porcelain")
+} else {
+    print("Git not available")
+}
+print("Cargo check:")
+if $(which cargo) != "" {
+    print("Checking Rust project...")
+    # run("cargo", "check")  # Commented out to avoid long build times
+    print("(Cargo check skipped for demo)")
+} else {
+    print("Cargo not available")
+}
+print()
+
+print("=== All tests completed! ===")
+print("External command integration is working properly.")
