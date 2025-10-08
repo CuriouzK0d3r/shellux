@@ -60,6 +60,9 @@ impl Parser {
                 self.parse_is_assignment_statement()
             } else if self.is_assignment() {
                 self.parse_assignment_statement()
+            } else if self.is_command_style_call() {
+                // Command-style function call (e.g., "show x" instead of "show(x)")
+                self.parse_command_style_call()
             } else {
                 // Expression statement
                 let expr = self.parse_expression()?;
@@ -797,6 +800,44 @@ impl Parser {
             }
         }
         false
+    }
+
+    fn is_command_style_call(&mut self) -> bool {
+        let start = self.current;
+
+        // Check if we have an identifier followed by more tokens on the same line
+        if let Some(token) = self.peek() {
+            if matches!(token.token_type, TokenType::Identifier(_)) {
+                self.advance();
+                // Check if the next token is not a newline, EOF, or left paren
+                let next_is_arg = if let Some(next) = self.peek() {
+                    !matches!(
+                        next.token_type,
+                        TokenType::Newline | TokenType::EOF | TokenType::LeftParen
+                    )
+                } else {
+                    false
+                };
+                self.current = start; // Reset position
+                return next_is_arg;
+            }
+        }
+        self.current = start; // Reset position
+        false
+    }
+
+    fn parse_command_style_call(&mut self) -> Result<Stmt> {
+        let name = self.expect_identifier()?;
+        let mut args = Vec::new();
+
+        // Parse arguments until we hit a newline or EOF
+        while !self.check(&TokenType::Newline) && !self.is_at_end() {
+            args.push(self.parse_primary()?);
+        }
+
+        self.consume_newline_or_eof()?;
+
+        Ok(Stmt::Expression(Expr::Call { name, args }))
     }
 }
 

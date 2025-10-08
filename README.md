@@ -57,9 +57,9 @@ shellux hello.sx
 
 ```shellux
 # Variable declaration (inferred typing)
-name := "John"
-age := 30
-is_admin := true
+name is "John"
+age is 30
+is_admin is true
 
 # Explicit typing
 count: int = 0
@@ -74,33 +74,63 @@ fn greet(name: string) -> string {
     return "Hello, " + name + "!"
 }
 
-message := greet("Alice")
+message is greet("Alice")
 print(message)
+```
+
+### Output and Display
+
+```shellux
+# Using print with parentheses
+x is 42
+print(x)
+
+# Using show without parentheses (simpler syntax)
+show x
+
+# Both are equivalent
+print("Hello, World!")
+show "Hello, World!"
+
+# Multiple arguments work with both
+print("Value:", x)
+show "Value:" x
 ```
 
 ### Command Execution
 
 ```shellux
-# Execute commands with proper error handling
-result := $(ls -la)
-if result.exit_code != 0 {
-    print("Command failed:", result.stderr)
-} else {
-    print(result.stdout)
-}
+# Execute commands with command substitution
+result is $(ls -la)
+print(result)
+
+# Direct command execution
+pwd
+ls
+date
 ```
 
-### Error Handling
+### Control Flow
 
 ```shellux
-try {
-    content := read_file("config.json")
-    config := parse_json(content)
-} catch FileNotFound as e {
-    print("Config file not found:", e.path)
-} catch JsonParseError as e {
-    print("Invalid JSON:", e.message)
-    exit(1)
+# If statements
+if score >= 90 {
+    print("Grade: A")
+} else {
+    if score >= 80 {
+        print("Grade: B")
+    } else {
+        print("Grade: C")
+    }
+}
+
+# Functions with conditional logic
+fn max(a: int, b: int) -> int {
+    if a > b {
+        return a
+    } else {
+        return b
+    }
 }
 ```
 

@@ -1,65 +1,426 @@
 #!/usr/bin/env shellux
 
 # Advanced Shellux features demonstration
+# This file demonstrates features currently supported by the interpreter
 
-# Arrays and maps
-fruits is ["apple", "banana", "cherry"]
-config is {"debug": true, "port": 8080, "host": "localhost"}
+print("=== Advanced Shellux Features ===")
+print("")
 
-print("First fruit: " + fruits[0])
-print("Debug mode: " + config["debug"])
+# Variables and type inference
+print("--- Variables and Types ---")
+name is "Alice"
+age is 30
+is_admin is true
+pi is 3.14159
 
-# For loops
-for fruit in fruits {
-    print("Fruit: " + fruit)
+print("Name:")
+print(name)
+print("Age:")
+print(age)
+print("Admin:")
+print(is_admin)
+print("Pi:")
+print(pi)
+print("")
+
+# Demonstrate the show command (equivalent to print but without parentheses)
+print("--- Show Command (Alternative to print) ---")
+message is "The 'show' command works like print but with simpler syntax"
+show message
+
+x is 99
+print("Using print(x):")
+print(x)
+print("Using show x:")
+show x
+
+show "You can show literal values too!"
+print("")
+
+# Functions with parameters and return values
+print("--- Functions ---")
+
+fn greet(person: string) -> string {
+    return "Hello, " + person + "!"
 }
 
-# Error handling
-try {
-    # This would attempt to read a file
-    # content := read_file("nonexistent.txt")
-    print("File read successfully")
-} catch FileNotFound as e {
-    print("File not found: " + e.path)
-} catch error {
-    print("Unknown error occurred")
+fn add(a: int, b: int) -> int {
+    return a + b
 }
 
-# Pattern matching
-status is "active"
-match status {
-    "active" => print("Service is running"),
-    "inactive" => print("Service is stopped"),
-    _ => print("Unknown status")
+fn multiply(x: float, y: float) -> float {
+    return x * y
 }
 
-# String interpolation
-user is "admin"
-count is 42
-message is "User ${user} has ${count} items"
-print(message)
+greeting is greet("Bob")
+print(greeting)
 
-# Function with multiple return values
-fn divide(a: float, b: float) -> (float, error) {
-    if b == 0.0 {
-        return 0.0, error("division by zero")
-    }
-    return a / b, nil
-}
+sum is add(10, 20)
+print("Sum of 10 and 20:")
+print(sum)
 
-result, err is divide(10.0, 2.0)
-if err != nil {
-    print("Error: " + err)
+product is multiply(3.5, 2.0)
+print("Product of 3.5 and 2.0:")
+print(product)
+print("")
+
+# Control flow - if statements
+print("--- Control Flow: If Statements ---")
+
+score is 85
+
+if score >= 90 {
+    print("Grade: A")
 } else {
-    print("Result: " + result)
+    if score >= 80 {
+        print("Grade: B")
+    } else {
+        if score >= 70 {
+            print("Grade: C")
+        } else {
+            if score >= 60 {
+                print("Grade: D")
+            } else {
+                print("Grade: F")
+            }
+        }
+    }
+}
+print("")
+
+# Control flow - manual iteration (while loops not yet implemented)
+print("--- Control Flow: Manual Iteration ---")
+
+counter is 0
+print(counter)
+counter is counter + 1
+print(counter)
+counter is counter + 1
+print(counter)
+counter is counter + 1
+print(counter)
+counter is counter + 1
+print(counter)
+print("")
+
+# Nested functions and local scope
+print("--- Nested Functions and Scope ---")
+
+fn calculate_area(width: float, height: float) -> float {
+    fn validate(value: float) -> float {
+        if value < 0.0 {
+            return 0.0
+        } else {
+            return value
+        }
+    }
+
+    valid_width is validate(width)
+    valid_height is validate(height)
+    return valid_width * valid_height
 }
 
-# Pipeline example (conceptual)
-# files is ls("/tmp")
-#     |> filter(fn(f) f.is_file())
-#     |> map(fn(f) f.name)
-#     |> sort()
-#
-# for file in files {
-#     print("File: " + file)
-# }
+area is calculate_area(10.0, 5.0)
+print("Area of 10.0 x 5.0:")
+print(area)
+
+area_invalid is calculate_area(-5.0, 10.0)
+print("Area of -5.0 x 10.0 (should be 0):")
+print(area_invalid)
+print("")
+
+# Logical operators
+print("--- Logical Operators ---")
+
+a is true
+b is false
+
+result_and is a && b
+result_or is a || b
+result_not is !a
+
+print("true AND false:")
+print(result_and)
+print("true OR false:")
+print(result_or)
+print("NOT true:")
+print(result_not)
+print("")
+
+# Comparison operators
+print("--- Comparison Operators ---")
+
+x is 10
+y is 20
+
+print("10 == 20:")
+print(x == y)
+print("10 != 20:")
+print(x != y)
+print("10 < 20:")
+print(x < y)
+print("10 > 20:")
+print(x > y)
+print("10 <= 20:")
+print(x <= y)
+print("10 >= 20:")
+print(x >= y)
+print("")
+
+# Arithmetic operations
+print("--- Arithmetic Operations ---")
+
+num1 is 15
+num2 is 4
+
+print("15 + 4 =")
+print(num1 + num2)
+print("15 - 4 =")
+print(num1 - num2)
+print("15 * 4 =")
+print(num1 * num2)
+print("15 / 4 =")
+print(num1 / num2)
+print("15 % 4 =")
+print(num1 % num2)
+print("")
+
+# String operations
+print("--- String Operations ---")
+
+first_name is "John"
+last_name is "Doe"
+full_name is first_name + " " + last_name
+print("Full name:")
+print(full_name)
+
+greeting_msg is "Welcome, " + full_name + "!"
+print(greeting_msg)
+print("")
+
+# Power function examples (using conditional returns)
+print("--- Power Calculation ---")
+
+fn power_of_two(n: int) -> int {
+    if n >= 5 {
+        return 32
+    } else {
+        if n >= 4 {
+            return 16
+        } else {
+            if n >= 3 {
+                return 8
+            } else {
+                if n >= 2 {
+                    return 4
+                } else {
+                    if n >= 1 {
+                        return 2
+                    } else {
+                        return 1
+                    }
+                }
+            }
+        }
+    }
+}
+
+pow2 is power_of_two(3)
+print("2^3 = ")
+print(pow2)
+
+pow5 is power_of_two(5)
+print("2^5 = ")
+print(pow5)
+print("")
+
+# Complex boolean expressions
+print("--- Complex Boolean Expressions ---")
+
+temperature is 25
+is_sunny is true
+is_weekend is false
+
+good_temp is temperature > 20 && temperature < 30
+should_go_outside is good_temp && (is_sunny || is_weekend)
+print("Should go outside:")
+print(should_go_outside)
+
+can_swim is temperature >= 20 && is_sunny
+print("Can go swimming:")
+print(can_swim)
+print("")
+
+# Built-in shell commands
+print("--- Built-in Commands ---")
+
+print("Current working directory:")
+pwd
+
+print("Date and time:")
+date
+
+print("Listing files:")
+ls
+
+print("")
+
+# Command substitution and output capture
+print("--- Command Substitution ---")
+
+current_dir is $(pwd)
+print("Captured directory: " + current_dir)
+
+user is $(whoami)
+print("Current user: " + user)
+print("")
+
+# File operations
+print("--- File Operations ---")
+
+test_content is "Hello from Shellux!\nThis is a test file.\nDemonstrating file I/O operations.\n"
+write_file("test_advanced.txt", test_content)
+print("File written: test_advanced.txt")
+
+read_content is read_file("test_advanced.txt")
+print("File content:")
+print(read_content)
+
+run("rm", "test_advanced.txt")
+print("File removed")
+print("")
+
+# Complex calculations
+print("--- Complex Calculations ---")
+
+fn calculate_circle_area(radius: float) -> float {
+    pi_value is 3.14159
+    return pi_value * radius * radius
+}
+
+fn calculate_circle_circumference(radius: float) -> float {
+    pi_value is 3.14159
+    return 2.0 * pi_value * radius
+}
+
+radius is 5.0
+circle_area is calculate_circle_area(radius)
+circle_circumference is calculate_circle_circumference(radius)
+
+print("Circle with radius 5.0:")
+print("  Area:")
+print(circle_area)
+print("  Circumference:")
+print(circle_circumference)
+print("")
+
+# More complex function examples
+print("--- Advanced Function Examples ---")
+
+fn max(a: int, b: int) -> int {
+    if a > b {
+        return a
+    } else {
+        return b
+    }
+}
+
+fn min(a: int, b: int) -> int {
+    if a < b {
+        return a
+    } else {
+        return b
+    }
+}
+
+fn absolute(n: int) -> int {
+    if n < 0 {
+        return -n
+    } else {
+        return n
+    }
+}
+
+max_val is max(42, 17)
+min_val is min(42, 17)
+abs_val is absolute(-15)
+
+print("max(42, 17):")
+print(max_val)
+print("min(42, 17):")
+print(min_val)
+print("absolute(-15):")
+print(abs_val)
+print("")
+
+# Working with command output
+print("--- Command Output Processing ---")
+
+hostname is $(hostname)
+print("Hostname: " + hostname)
+
+# Check if a file exists using command substitution
+cargo_check is $(ls Cargo.toml 2>/dev/null || echo "NOT_FOUND")
+if cargo_check != "NOT_FOUND" {
+    print("Cargo.toml exists in current directory")
+} else {
+    print("Cargo.toml not found")
+}
+print("")
+
+# Demonstrating variable shadowing
+print("--- Variable Shadowing ---")
+
+value is 10
+print("Original value:")
+print(value)
+
+value is 20
+print("Updated value:")
+print(value)
+
+value is value + 30
+print("After addition:")
+print(value)
+print("")
+
+# Function returning different types based on logic
+print("--- Dynamic Return Values ---")
+
+fn classify_number(n: int) -> string {
+    if n > 0 {
+        return "positive"
+    } else {
+        if n < 0 {
+            return "negative"
+        } else {
+            return "zero"
+        }
+    }
+}
+
+classification1 is classify_number(42)
+classification2 is classify_number(-7)
+classification3 is classify_number(0)
+
+print("42 is: " + classification1)
+print("-7 is: " + classification2)
+print("0 is: " + classification3)
+print("")
+
+print("=== All Advanced Features Demonstrated Successfully! ===")
+print("")
+print("Features shown:")
+print("- Variables with type inference")
+print("- Functions with parameters and return values")
+print("- Nested functions and scope")
+print("- Control flow (nested if/else)")
+print("- Logical and comparison operators")
+print("- Arithmetic operations")
+print("- String concatenation")
+print("- Iterative calculations")
+print("- Command substitution")
+print("- File I/O operations")
+print("- Built-in shell commands")
+print("- Variable shadowing and reassignment")
+print("- Show command (print without parentheses)")

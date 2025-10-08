@@ -1,0 +1,142 @@
+#!/usr/bin/env shellux
+
+# Show Command Demonstration
+# This file demonstrates the new 'show' command which provides
+# a simpler alternative to print() without requiring parentheses
+
+print("=== Shellux Show Command Demo ===")
+print("")
+
+# Basic usage
+print("1. Basic Variable Display")
+print("   Traditional: print(variable)")
+print("   New way:     show variable")
+print("")
+
+name is "Alice"
+age is 25
+score is 95.5
+
+print("   Using print():")
+print(name)
+print(age)
+print(score)
+
+print("")
+print("   Using show:")
+show name
+show age
+show score
+
+print("")
+print("2. Literal Values")
+print("   You can show literal values directly:")
+print("")
+
+show "Hello, World!"
+show 42
+show true
+show 3.14159
+
+print("")
+print("3. Expressions")
+print("   Show works with any expression:")
+print("")
+
+x is 10
+y is 20
+sum is x + y
+show sum
+
+product is 5 * 8
+show product
+
+greeting is "Hello, " + name + "!"
+show greeting
+
+print("")
+print("4. Multiple Arguments")
+print("   Show supports multiple arguments like print:")
+print("")
+
+show "Name:" name
+show "Age:" age
+show "Score:" score
+show "Sum of" x "and" y "is" sum
+
+print("")
+print("5. Comparisons and Logic")
+print("   Show works with boolean expressions:")
+print("")
+
+is_adult is age >= 18
+show is_adult
+
+passed is score >= 60
+show passed
+
+result is is_adult && passed
+show result
+
+print("")
+print("6. Function Results")
+print("   Show works with function return values:")
+print("")
+
+fn calculate(a: int, b: int) -> int {
+    return a * a + b * b
+}
+
+result is calculate(3, 4)
+show result
+
+fn greet(person: string) -> string {
+    return "Welcome, " + person + "!"
+}
+
+message is greet(name)
+show message
+
+print("")
+print("7. Practical Example")
+print("   Using show in a real scenario:")
+print("")
+
+username is "alice"
+status is "active"
+login_count is 42
+
+show "User Information:"
+show "  Username:" username
+show "  Status:" status
+show "  Logins:" login_count
+
+if status == "active" {
+    show "  Access: Granted"
+} else {
+    show "  Access: Denied"
+}
+
+print("")
+print("8. Why Use Show?")
+print("   • Simpler syntax - no parentheses needed")
+print("   • More readable for simple displays")
+print("   • Shell-like feel for command-style operations")
+print("   • Fully compatible with existing print() calls")
+print("")
+
+print("9. When to Use Each:")
+print("   Use print() when:")
+print("   • You prefer explicit function call syntax")
+print("   • Working with complex nested expressions")
+print("")
+print("   Use show when:")
+print("   • Displaying simple variables or values")
+print("   • Want cleaner, more readable code")
+print("   • Prefer shell-like command syntax")
+print("")
+
+print("=== Demo Complete ===")
+print("")
+print("Both print() and show are equivalent in functionality.")
+print("Choose the style that best fits your code!")

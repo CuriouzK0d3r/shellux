@@ -148,11 +148,35 @@ pub fn register_builtins(env: &mut Environment) {
             closure: Environment::new(),
         },
     );
+
+    env.define(
+        "show".to_string(),
+        Value::Function {
+            name: "show".to_string(),
+            parameters: vec![],
+            body: vec![],
+            closure: Environment::new(),
+        },
+    );
 }
 
 pub fn call_builtin(name: &str, args: &[Value]) -> Result<Value> {
     match name {
         "print" => {
+            if args.is_empty() {
+                println!();
+            } else {
+                let output = args
+                    .iter()
+                    .map(|v| v.to_string())
+                    .collect::<Vec<_>>()
+                    .join(" ");
+                println!("{}", output);
+            }
+            Ok(Value::Nil)
+        }
+
+        "show" => {
             if args.is_empty() {
                 println!();
             } else {
@@ -421,5 +445,6 @@ pub fn is_builtin(name: &str) -> bool {
             | "cd"
             | "pwd"
             | "run"
+            | "show"
     )
 }
