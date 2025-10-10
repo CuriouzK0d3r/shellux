@@ -19,6 +19,7 @@ fn greet(person: string) -> string {
 
 message is greet("Alice")
 print(message)
+show message
 
 # Command execution example (commented out for now)
 # result is $(echo "This would execute a shell command")

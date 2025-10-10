@@ -1,0 +1,53 @@
+{
+  "name": "shellux-syntax",
+  "displayName": "Shellux Syntax Highlighting",
+  "description": "Syntax highlighting for Shellux scripting language (.sx files)",
+  "version": "0.1.0",
+  "publisher": "shellux",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "shellux",
+    "shell",
+    "scripting",
+    "syntax",
+    "highlighting"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/shellux"
+  },
+  "license": "MIT",
+  "contributes": {
+    "languages": [
+      {
+        "id": "shellux",
+        "aliases": [
+          "Shellux",
+          "shellux"
+        ],
+        "extensions": [
+          ".sx",
+          ".shx"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/shellux-icon.svg",
+          "dark": "./icons/shellux-icon.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "shellux",
+        "scopeName": "source.shellux",
+        "path": "./syntaxes/shellux.tmLanguage.json"
+      }
+    ]
+  }
+}

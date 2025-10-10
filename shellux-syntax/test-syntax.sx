@@ -1,0 +1,260 @@
+#!/usr/bin/env shellux
+
+# Shellux Syntax Highlighting Test File
+# This file tests various language features for syntax highlighting
+
+# ============================================================================
+# 1. COMMENTS
+# ============================================================================
+
+# This is a single-line comment
+
+/*
+This is a multi-line comment
+It can span multiple lines
+*/
+
+# ============================================================================
+# 2. VARIABLES AND CONSTANTS
+# ============================================================================
+
+# Variable declarations
+name is "Alice"
+age is 30
+height is 5.9
+is_admin is true
+nothing is nil
+
+# Explicit typing
+count: int = 0
+price: float = 19.99
+items: []string = ["apple", "banana", "cherry"]
+
+# Constants
+const PI: float = 3.14159
+const MAX_RETRIES: int = 3
+const APP_NAME: string = "Shellux"
+
+# ============================================================================
+# 3. STRINGS
+# ============================================================================
+
+# Simple strings
+greeting is "Hello, World!"
+single_quote is 'Single quotes work too'
+
+# String interpolation
+message is "Hello, ${name}! You are ${age} years old."
+complex is "Result: ${2 + 2} items"
+
+# Multi-line strings
+sql is """
+    SELECT * FROM users
+    WHERE age > 18
+    AND active = true
+"""
+
+# Escape characters
+escaped is "Line 1\nLine 2\tTabbed"
+
+# ============================================================================
+# 4. NUMBERS
+# ============================================================================
+
+# Integers
+positive is 42
+negative is -10
+zero is 0
+
+# Floats
+pi is 3.14159
+scientific is 1.23e-4
+
+# Different bases
+hex_num is 0xFF
+octal_num is 0o77
+binary_num is 0b1010
+
+# ============================================================================
+# 5. FUNCTIONS
+# ============================================================================
+
+# Function definition
+fn greet(person: string) -> string {
+    return "Hello, " + person + "!"
+}
+
+# Function with multiple parameters
+fn add(a: int, b: int) -> int {
+    return a + b
+}
+
+# Function with multiple return values
+fn divide(a: float, b: float) -> (float, error) {
+    if b == 0 {
+        return 0.0, error("division by zero")
+    }
+    return a / b, nil
+}
+
+# Function call
+result is greet("Bob")
+sum is add(10, 20)
+
+# ============================================================================
+# 6. CONTROL FLOW
+# ============================================================================
+
+# If-else statements
+if age >= 18 {
+    print("Adult")
+} else if age >= 13 {
+    print("Teenager")
+} else {
+    print("Child")
+}
+
+# For loops
+for i in range(0, 10) {
+    print(i)
+}
+
+for item in items {
+    print("Item: " + item)
+}
+
+# While loop
+counter is 0
+while counter < 5 {
+    print("Counter: " + counter)
+    counter = counter + 1
+}
+
+# ============================================================================
+# 7. OPERATORS
+# ============================================================================
+
+# Arithmetic
+a is 10 + 5
+b is 10 - 5
+c is 10 * 5
+d is 10 / 5
+e is 10 % 3
+f is 2 ** 8
+
+# Comparison
+equal is a == b
+not_equal is a != b
+less is a < b
+less_eq is a <= b
+greater is a > b
+greater_eq is a >= b
+
+# Logical
+and_result is true && false
+or_result is true || false
+not_result is !true
+
+# Bitwise
+bit_and is 5 & 3
+bit_or is 5 | 3
+bit_xor is 5 ^ 3
+bit_not is ~5
+left_shift is 5 << 2
+right_shift is 5 >> 2
+
+# Assignment
+x is 10
+x = 20
+x += 5
+x -= 3
+x *= 2
+x /= 4
+
+# ============================================================================
+# 8. BUILT-IN FUNCTIONS
+# ============================================================================
+
+# I/O functions
+print("Hello, World!")
+println("With newline")
+show message
+user_input is input("Enter name: ")
+
+# String functions
+length is len(name)
+has_substring is contains(name, "ice")
+starts is starts_with(name, "Al")
+ends is ends_with(name, "ce")
+parts is split(name, "")
+joined is join(parts, "-")
+
+# File operations
+content is read_file("config.json")
+write_file("output.txt", "Hello")
+file_exists is exists("test.txt")
+is_directory is is_dir("/tmp")
+
+# Environment
+home is env("HOME")
+set_env("MY_VAR", "value")
+
+# Process control
+exit(0)
+
+# ============================================================================
+# 9. COMMAND EXECUTION
+# ============================================================================
+
+# Simple command
+output is $(ls -la)
+print(output.stdout)
+
+# Command with error handling
+result is $(cat nonexistent.txt)
+if result.exit_code != 0 {
+    print("Error: " + result.stderr)
+}
+
+# Pipeline operator
+files is ls("/tmp") |> filter(fn(f) f.is_file()) |> map(fn(f) f.name)
+
+# ============================================================================
+# 10. ERROR HANDLING
+# ============================================================================
+
+# Try-catch
+try {
+    risky_operation()
+} catch FileNotFound as e {
+    print("File not found: " + e.path)
+} catch JsonParseError as e {
+    print("JSON error: " + e.message)
+}
+
+# Match expression
+match result {
+    Ok(value) => print("Success: " + value),
+    Err(error) => print("Failed: " + error)
+}
+
+# ============================================================================
+# 11. TYPES
+# ============================================================================
+
+# Primitive types
+int_val: int = 42
+float_val: float = 3.14
+string_val: string = "text"
+bool_val: bool = true
+any_val: any = "anything"
+
+# Collection types
+array_val: []int = [1, 2, 3, 4, 5]
+map_val: map[string]int = {"one": 1, "two": 2}
+
+# ============================================================================
+# END OF TEST FILE
+# ============================================================================
+
+print("Syntax highlighting test complete!")

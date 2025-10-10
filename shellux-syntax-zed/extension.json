@@ -1,0 +1,10 @@
+{
+  "id": "shellux",
+  "name": "Shellux",
+  "version": "0.1.0",
+  "description": "Syntax highlighting for Shellux scripting language",
+  "authors": ["Shellux Project"],
+  "repository": "https://github.com/yourusername/shellux",
+  "categories": ["Languages"],
+  "languages": ["languages/shellux"]
+}

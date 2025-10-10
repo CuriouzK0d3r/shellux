@@ -1,0 +1,14 @@
+{
+  "name": "Shellux",
+  "grammar": "shellux",
+  "path_suffixes": ["sx", "shx"],
+  "line_comments": ["# "],
+  "block_comment": ["/*", "*/"],
+  "brackets": [
+    { "start": "{", "end": "}", "close": true, "newline": true },
+    { "start": "[", "end": "]", "close": true, "newline": false },
+    { "start": "(", "end": ")", "close": true, "newline": false }
+  ],
+  "autoclose_before": ";:.,=}])>` \n\t",
+  "word_characters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+}
