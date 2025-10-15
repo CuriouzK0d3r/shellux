@@ -39,16 +39,17 @@ A Visual Studio Code extension that provides syntax highlighting for Shellux scr
 1. Package the extension:
    ```bash
    cd shellux-syntax
-   npm install -g vsce
-   vsce package
+  npx @vscode/vsce package
    ```
 
 2. Install the generated `.vsix` file:
    - Open VS Code
    - Go to Extensions view (`Cmd+Shift+X` or `Ctrl+Shift+X`)
    - Click the `...` menu at the top
-   - Select "Install from VSIX..."
+  - Select "Install from VSIX..."
    - Choose the generated `.vsix` file
+
+Note: Icons are optional. If you add `icon.png` or language icons under `icons/`, update `package.json` accordingly.
 
 ## Usage
 
@@ -127,7 +128,7 @@ MIT License - See LICENSE file for details
 
 ## About Shellux
 
-Shellux is a modern scripting language designed to replace bash scripting with improved syntax, better error handling, and enhanced functionality. Learn more at the [Shellux repository](https://github.com/yourusername/shellux).
+Shellux is a modern scripting language designed to replace bash scripting with improved syntax, better error handling, and enhanced functionality. Learn more at the [Shellux repository](https://github.com/CuriouzK0d3r/shellux).
 
 ## Release Notes
 

@@ -4,7 +4,6 @@
   "description": "Syntax highlighting for Shellux scripting language (.sx files)",
   "version": "0.1.0",
   "publisher": "shellux",
-  "icon": "icon.png",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -20,9 +19,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/shellux"
+    "url": "https://github.com/CuriouzK0d3r/shellux"
   },
   "license": "MIT",
+  "scripts": {
+    "package": "npx @vscode/vsce package",
+    "package:install": "npx @vscode/vsce package && code --install-extension $(ls -t *.vsix | head -n1)",
+    "package:publish": "npx @vscode/vsce publish"
+  },
   "contributes": {
     "languages": [
       {
@@ -35,11 +39,7 @@
           ".sx",
           ".shx"
         ],
-        "configuration": "./language-configuration.json",
-        "icon": {
-          "light": "./icons/shellux-icon.svg",
-          "dark": "./icons/shellux-icon.svg"
-        }
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [

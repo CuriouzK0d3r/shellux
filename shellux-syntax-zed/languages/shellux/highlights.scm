@@ -1,159 +1,129 @@
 ; Shellux Syntax Highlighting for Zed Editor
-; This file defines highlighting rules using Tree-sitter query syntax
+; Using bash tree-sitter grammar
 
 ; Comments
 (comment) @comment
 
 ; Keywords
 [
-  "fn"
-  "return"
   "if"
+  "then"
   "else"
+  "elif"
+  "fi"
+  "case"
+  "esac"
   "for"
+  "select"
   "while"
+  "until"
+  "do"
+  "done"
   "in"
-  "match"
-  "try"
-  "catch"
+  "function"
+] @keyword
+
+; Control flow
+[
   "break"
   "continue"
-] @keyword
+  "return"
+] @keyword.control
 
 ; Declaration keywords
 [
-  "let"
-  "const"
+  "declare"
+  "typeset"
+  "export"
+  "readonly"
+  "local"
 ] @keyword.storage
 
-; Operators as keywords
-[
-  "is"
-  "as"
-  "and"
-  "or"
-  "not"
-] @keyword.operator
+; Commands
+(command_name) @function
 
-; Boolean constants
-[
-  "true"
-  "false"
-] @constant.builtin.boolean
-
-; Null/nil
-[
-  "nil"
-  "null"
-] @constant.builtin
-
-; Types
-[
-  "int"
-  "float"
-  "string"
-  "bool"
-  "any"
-  "error"
-  "map"
-  "array"
-] @type.builtin
+; Built-in commands
+(command_name) @function.builtin
+  (#match? @function.builtin "^(echo|printf|read|cd|pwd|pushd|popd|exit|return|eval|exec|source|test|shift|unset|alias|bg|fg|jobs|kill|wait|trap|let|set|unset)$")
 
 ; Function definitions
 (function_definition
-  name: (identifier) @function)
-
-; Function calls
-(call_expression
-  function: (identifier) @function)
-
-; Built-in functions
-(identifier) @function.builtin
-  (#match? @function.builtin "^(print|println|show|input|exit|env|set_env|len|contains|starts_with|ends_with|split|join|read_file|write_file|exists|is_file|is_dir|mkdir|rm|mv|cp|parse_json|default_config|join_path|duration|filter|map|sort|trim|lower|upper|range|walk_dir|spawn|kill|wait)$")
-
-; Parameters
-(parameter
-  name: (identifier) @variable.parameter)
+  name: (word) @function)
 
 ; Variables
-(identifier) @variable
+(variable_name) @variable
 
-; Constants (uppercase identifiers)
-((identifier) @constant
-  (#match? @constant "^[A-Z][A-Z0-9_]*$"))
+; Special variables
+(special_variable_name) @variable.special
 
-; Numbers
-(integer) @constant.numeric.integer
-(float) @constant.numeric.float
-(hex_literal) @constant.numeric.hex
-(octal_literal) @constant.numeric.octal
-(binary_literal) @constant.numeric.binary
-
-; Strings
-(string) @string
-(raw_string) @string
-(multiline_string) @string
-
-; String interpolation
-(interpolation
+; Variable expansions
+(simple_expansion) @variable
+(expansion
   "${" @punctuation.special
-  "}" @punctuation.special) @embedded
+  "}" @punctuation.special)
 
 ; Command substitution
 (command_substitution
   "$(" @punctuation.special
-  ")" @punctuation.special) @embedded
+  ")" @punctuation.special)
+
+(command_substitution
+  "`" @punctuation.special)
+
+; Process substitution
+(process_substitution
+  "<(" @punctuation.special
+  ")" @punctuation.special)
+
+(process_substitution
+  ">(" @punctuation.special
+  ")" @punctuation.special)
+
+; Strings
+(string) @string
+(raw_string) @string
+(ansii_c_string) @string
+
+; String content
+(string_content) @string
 
 ; Escape sequences
 (escape_sequence) @constant.character.escape
 
+; Numbers
+(number) @constant.numeric
+
 ; Operators
 [
-  "+"
-  "-"
-  "*"
-  "/"
-  "%"
-  "**"
-  "="
-  ":="
-  "+="
-  "-="
-  "*="
-  "/="
-  "=="
-  "!="
-  "<"
-  "<="
-  ">"
-  ">="
-  "&&"
-  "||"
-  "!"
+  ";"
+  ";;"
+  ";&"
+  ";;&"
   "&"
+  "&&"
   "|"
-  "^"
-  "~"
-  "<<"
-  ">>"
-  "|>"
+  "||"
+  "|&"
+  "!"
 ] @operator
 
-; Arrows
+; Redirects
 [
-  "->"
-  "=>"
-] @punctuation.special
+  "<"
+  ">"
+  ">>"
+  "<<<"
+  "<&"
+  ">&"
+  "&>"
+  "&>>"
+  "<>"
+] @operator
+
+; Pipes
+"|" @operator
 
 ; Delimiters
-[
-  ","
-  ";"
-  ":"
-  "."
-] @punctuation.delimiter
-
-; Brackets
 [
   "("
   ")"
@@ -161,20 +131,38 @@
   "]"
   "{"
   "}"
+  "[["
+  "]]"
+  "(("
+  "))"
 ] @punctuation.bracket
 
-; Shebang
-(shebang) @comment.special
+; Test operators
+(test_operator) @operator
 
-; Type annotations
-(type_annotation
-  ":" @punctuation.special
-  type: (type_identifier) @type)
+; Binary expressions
+(binary_expression
+  operator: _ @operator)
 
-; Return type
-(return_type
-  "->" @punctuation.special
-  type: (type_identifier) @type)
+; Unary expressions
+(unary_expression
+  operator: _ @operator)
 
-; Errors (optional, for invalid syntax)
-(ERROR) @error
+; File descriptors
+(file_redirect
+  descriptor: (file_descriptor) @constant.numeric)
+
+; Glob patterns
+(expansion
+  (subscript
+    "[" @punctuation.bracket
+    "]" @punctuation.bracket))
+
+; Regex
+(regex) @string.regex
+
+; Words and literals
+(word) @variable
+
+; Concatenation
+(concatenation) @string

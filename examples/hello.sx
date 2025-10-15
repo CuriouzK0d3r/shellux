@@ -8,6 +8,8 @@ print("Hello, " + name + "!")
 age is 30
 is_admin is true
 
+x is 10
+
 if age >= 18 {
     print("You are an adult!")
 }

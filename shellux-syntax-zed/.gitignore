@@ -1,0 +1,38 @@
+# Rust build artifacts (can be 200+ MB)
+target/
+
+# WebAssembly build artifacts (only needed if extension has custom Rust logic)
+*.wasm
+*.wasm.backup
+
+# Exclude large tree-sitter grammar source repositories
+# These are only needed during development, not for distribution
+grammars/bash/
+grammars/shellux/
+grammars/
+
+# Cargo files (not needed for distribution)
+Cargo.lock
+
+# Development files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary test files
+test.sx
+test.shx
+*.tmp
+
+# Large documentation files (optional - keep in git but not needed at runtime)
+# Uncomment these if you want to exclude them from dev extension:
+# TREE_SITTER_GUIDE.md
+# FILES_OVERVIEW.md
+# STATUS.md
+# OPTIMIZATION.md
+# INSTALLATION_FIX.md
+# DEV_EXTENSION_SETUP.md

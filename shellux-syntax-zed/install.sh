@@ -6,16 +6,16 @@
 set -e
 
 EXTENSION_NAME="shellux"
-ZED_EXTENSIONS_DIR="$HOME/.config/zed/extensions"
+ZED_EXTENSIONS_DIR="$HOME/Library/Application Support/Zed/extensions"
 EXTENSION_DIR="$ZED_EXTENSIONS_DIR/$EXTENSION_NAME"
 
 echo "Installing Shellux Syntax Highlighting Extension for Zed..."
 echo ""
 
 # Check if Zed is installed
-if ! command -v zed &> /dev/null && [ ! -d "$HOME/.config/zed" ]; then
+if ! command -v zed &> /dev/null && [ ! -d "$HOME/Library/Application Support/Zed" ]; then
     echo "⚠️  Warning: Zed doesn't appear to be installed"
-    echo "   However, we'll install the extension anyway."
+    echo "However, we'll install the extension anyway."
     echo ""
 fi
 
@@ -32,11 +32,22 @@ fi
 # Copy extension files
 echo "Copying extension files..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cp -r "$SCRIPT_DIR" "$EXTENSION_DIR"
 
-# Remove installer script and docs from destination
-rm -f "$EXTENSION_DIR/install.sh"
-rm -f "$EXTENSION_DIR/QUICKSTART.md"
+# Create extension directory structure
+mkdir -p "$EXTENSION_DIR/languages/shellux"
+
+# Copy only essential files (not the entire directory)
+echo "Copying core files..."
+cp "$SCRIPT_DIR/extension.toml" "$EXTENSION_DIR/"
+cp -r "$SCRIPT_DIR/languages/shellux" "$EXTENSION_DIR/languages/"
+
+# Copy documentation (optional but useful)
+[ -f "$SCRIPT_DIR/README.md" ] && cp "$SCRIPT_DIR/README.md" "$EXTENSION_DIR/"
+[ -f "$SCRIPT_DIR/LICENSE" ] && cp "$SCRIPT_DIR/LICENSE" "$EXTENSION_DIR/"
+[ -f "$SCRIPT_DIR/CHANGELOG.md" ] && cp "$SCRIPT_DIR/CHANGELOG.md" "$EXTENSION_DIR/"
+
+# Note: We don't copy grammars/ directory because Zed has bash built-in
+# The 11MB bash tree-sitter source is unnecessary and slows installation
 
 echo ""
 echo "✅ Extension installed successfully!"

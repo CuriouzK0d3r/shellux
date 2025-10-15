@@ -1,0 +1,18 @@
+id = "shellux"
+name = "Shellux"
+version = "0.1.0"
+schema_version = 1
+authors = ["Shellux Project <https://github.com/yourusername/shellux>"]
+description = "Syntax highlighting for Shellux scripting language"
+repository = "https://github.com/yourusername/shellux"
+
+# Note: We use Zed's built-in bash grammar as a temporary solution
+# until a dedicated tree-sitter-shellux grammar is created.
+#
+# Bash is built into Zed, so we don't need to declare it here.
+# The language config references it via: grammar = "bash"
+#
+# When a custom Shellux grammar is ready, add it like this:
+# [grammars.shellux]
+# repository = "https://github.com/username/tree-sitter-shellux"
+# rev = "main"

@@ -1,6 +1,6 @@
 # Quick Start - Shellux for Zed
 
-Get Shellux syntax highlighting in Zed in 2 minutes!
+Get Shellux syntax highlighting in Zed in under 30 seconds! ⚡
 
 ## Installation
 
@@ -12,13 +12,15 @@ mkdir -p ~/.config/zed/extensions && cp -r shellux-syntax-zed ~/.config/zed/exte
 
 Then restart Zed.
 
-### Using the Install Script
+### Using the Install Script (Recommended - Takes < 1 second!)
 
 ```bash
 cd shellux-syntax-zed
 chmod +x install.sh
 ./install.sh
 ```
+
+**Installation is now optimized** - copies only ~15KB of essential files (down from 294MB!)
 
 ## Test It
 

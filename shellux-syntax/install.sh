@@ -10,11 +10,10 @@ EXTENSION_DIR="$HOME/.vscode/extensions/$EXTENSION_NAME"
 
 echo "Installing Shellux Syntax Highlighting Extension..."
 
-# Check if VS Code is installed
+# Optional: check for VS Code CLI (not required to copy the extension)
 if ! command -v code &> /dev/null; then
-    echo "Error: VS Code 'code' command not found in PATH"
-    echo "Please install VS Code or add it to your PATH"
-    exit 1
+    echo "Warning: VS Code 'code' command not found in PATH."
+    echo "We'll still install the files; use VS Code UI to reload or install from VSIX."
 fi
 
 # Create extensions directory if it doesn't exist

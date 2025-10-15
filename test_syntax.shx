@@ -1,0 +1,194 @@
+#!/usr/bin/env shellux
+
+# Test file for Shellux syntax highlighting in Zed
+
+/* Multi-line comment
+   Testing block comments
+   for syntax highlighting */
+
+# Constants and variables
+const MAX_RETRIES = 3
+let name = "Shellux"
+let count := 42
+let pi = 3.14159
+
+# String interpolation
+let greeting = "Hello, ${name}!"
+let multi_line = """
+This is a multi-line string
+with ${count} items
+"""
+
+# Function definition
+fn calculate(x: int, y: int) -> int {
+    return x + y * 2
+}
+
+# Function with type annotations
+fn process_data(data: array, threshold: float) -> map {
+    let result = map()
+    result["status"] = "success"
+    return result
+}
+
+# Conditionals
+if count > 10 {
+    println("Count is greater than 10")
+} else {
+    println("Count is 10 or less")
+}
+
+# Loops
+for i in range(0, 10) {
+    println("Iteration: ${i}")
+}
+
+# Pattern matching
+match count {
+    0 => println("Zero"),
+    1 => println("One"),
+    _ => println("Many")
+}
+
+# Array operations
+let numbers = [1, 2, 3, 4, 5]
+let doubled = numbers |> map(x => x * 2) |> filter(x => x > 5)
+
+# Map operations
+let config = {
+    "host": "localhost",
+    "port": 8080,
+    "debug": true
+}
+
+# Built-in functions
+println("Testing built-in functions")
+show(config)
+let input_val = input("Enter something: ")
+let file_content = read_file("test.txt")
+
+# Command substitution
+let files = $(ls -la)
+let current_dir = $(pwd)
+
+# Error handling
+try {
+    let data = read_file("nonexistent.txt")
+    println(data)
+} catch error {
+    println("Error: ${error}")
+}
+
+# Boolean and logical operators
+let is_valid = true
+let is_ready = false
+let result = is_valid and not is_ready
+let combined = (count > 10) or (name == "Shellux")
+
+# Operators
+let sum = 10 + 20
+let product = 5 * 4
+let power = 2 ** 8
+let modulo = 15 % 4
+let comparison = 10 >= 5
+let equality = name == "Shellux"
+
+# Bitwise operators
+let bit_and = 5 & 3
+let bit_or = 5 | 3
+let bit_xor = 5 ^ 3
+let shift_left = 2 << 3
+let shift_right = 16 >> 2
+
+# Assignment operators
+count += 5
+count -= 2
+count *= 3
+count /= 2
+
+# Pipeline operator
+let processed = "HELLO" |> lower() |> trim() |> split("")
+
+# Type keywords
+let any_value: any = 123
+let string_val: string = "test"
+let int_val: int = 42
+let float_val: float = 3.14
+let bool_val: bool = true
+let array_val: array = []
+let map_val: map = {}
+
+# Special values
+let empty = nil
+let nothing = null
+
+# Environment and system functions
+let home = env("HOME")
+set_env("MY_VAR", "value")
+exit(0)
+
+# File system operations
+if exists("test.txt") and is_file("test.txt") {
+    mkdir("new_dir")
+    cp("test.txt", "backup.txt")
+    mv("backup.txt", "archive.txt")
+    rm("archive.txt")
+}
+
+# Process management
+let process = spawn("echo", ["Hello"])
+wait(process)
+kill(process)
+
+# String operations
+let text = "Hello, World!"
+if text |> contains("World") {
+    let parts = text |> split(", ")
+    let joined = parts |> join(" - ")
+    let lower_text = text |> lower()
+    let upper_text = text |> upper()
+    let trimmed = "  spaces  " |> trim()
+}
+
+# JSON parsing
+let json_data = parse_json('{"name": "test", "value": 42}')
+
+# Path operations
+let full_path = join_path("/home", "user", "file.txt")
+
+# Duration
+let wait_time = duration("5s")
+
+# Numbers in different bases
+let hex_num = 0xFF
+let octal_num = 0o77
+let binary_num = 0b1010
+let float_num = 1.23e-4
+
+# Keywords showcase
+fn keyword_test() {
+    let x = 10
+    const Y = 20
+
+    if x is int {
+        println("x is an integer")
+    }
+
+    for item in [1, 2, 3] {
+        if item == 2 {
+            continue
+        }
+        println(item)
+        if item > 5 {
+            break
+        }
+    }
+
+    while x < 100 {
+        x += 1
+    }
+
+    return x as float
+}
+
+println("✅ Syntax highlighting test complete!")
